@@ -9,7 +9,6 @@ app.use(function (req, reponse, next) {
   next();
 });
 
-
 // Database set up
 let db = new sqlite3.Database('A2.db', sqlite3.OPEN_READONLY, (err) => {
   if (err) {
@@ -17,7 +16,6 @@ let db = new sqlite3.Database('A2.db', sqlite3.OPEN_READONLY, (err) => {
   }
   console.log('Connected to Assignment 2 DB');
 });
-
 
  var getInfo = function (option) {
    var opts = option || {};
@@ -44,27 +42,21 @@ let db = new sqlite3.Database('A2.db', sqlite3.OPEN_READONLY, (err) => {
    }
 }
 
-
 app.use('/users', getInfo({query:'SELECT * FROM Users'}));
 app.get('/users', function (req, res) {
 });
-
 
 app.use('/messages', getInfo({query:'SELECT * FROM Messages'}));
 app.get('/messages', function (req, res) {
 });
 
-
 app.use('/likes', getInfo({query:'SELECT * FROM Likes'}));
 app.get('/likes', function (req, res) {
 });
 
-
 app.use('/contacts', getInfo({query:'SELECT * FROM Contacts'}));
 app.get('/contacts', function (req, res) {
 });
-
-
 
 app.get('*', function (req, res) {
     res.end("404 Page not found");
