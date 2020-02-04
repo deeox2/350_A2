@@ -10,8 +10,8 @@ const sqlite3 = require('sqlite3');
 const app = express();
 
 // Basic express set up.
-app.use(function (req, reponse, next) {
-  reponse.writeHead(200, { 'Content-Type': 'text/plain'});
+app.use(function (req, response, next) {
+  response.writeHead(200, { 'Content-Type': 'text/plain'});
   next();
 });
 
@@ -37,8 +37,8 @@ let db = new sqlite3.Database('assignment2.db', sqlite3.OPEN_READONLY, (err) => 
       console.log(rows);
       var output = '';
       rows.forEach(function (row) {
-        var strAsJson = JSON.stringify(row);
-        output = output + (strAsJson + '\n');
+        var rowAsJSONStr = JSON.stringify(row);
+        output = output + (rowAsJSONStr + '\n');
       });
       response.write(output);
       response.end();
