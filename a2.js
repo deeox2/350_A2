@@ -33,29 +33,59 @@ app.get('/users', function (request, reponse) {
     reponse.end();
    });
 
-  db.close();
-  //reponse.end();
+
+
 
 });
 
 
 app.get('/messages', function (request, reponse) {
-  reponse.end("Messages table");
+  db.all('SELECT * FROM Messages', [], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    console.log(rows);
+    var myJson = JSON.stringify(rows);
+    reponse.write(myJson);
+    reponse.end();
+   });
+
+
 });
 
 
 app.get('/likes', function (request, reponse) {
-  reponse.end("Likes table");
+  db.all('SELECT * FROM Likes', [], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    console.log(rows);
+    var myJson = JSON.stringify(rows);
+    reponse.write(myJson);
+    reponse.end();
+   });
+
+
 });
 
 
 app.get('/contacts', function (request, reponse) {
-  reponse.end("Contacts table");
+  db.all('SELECT * FROM Contacts', [], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    console.log(rows);
+    var myJson = JSON.stringify(rows);
+    reponse.write(myJson);
+    reponse.end();
+   });
+
 });
 
 
 app.get('*', function (request, reponse) {
-  reponse.end('404 page not found')
+    reponse.end("404 Page not found");
+
 });
 
 
