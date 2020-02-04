@@ -4,7 +4,7 @@ const http = require('http');
 const sqlite3 = require('sqlite3');
 const app = express();
 
-app.use(function (request, reponse, next) {
+app.use(function (req, reponse, next) {
   reponse.writeHead(200, { 'Content-Type': 'text/plain'});
   next();
 });
@@ -19,76 +19,60 @@ let db = new sqlite3.Database('A2.db', sqlite3.OPEN_READONLY, (err) => {
 });
 
 
+ var getInfo = function (option) {
+   var opts = option || {};
+   var query = opts.query || '';
 
-app.get('/users', function (request, reponse) {
+   return function _getInfo(req, res, next) {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        throw err;
+      }
+      console.log(rows);
+
+      var str = '';
+      rows.forEach(function (row) {
+        var tempJson = JSON.stringify(row);
+        str = str + (tempJson + '\n');
+      });
+
+      res.write(str);
+      res.end();
+     });
+
+     next();
+   }
+}
 
 
-  db.all('SELECT * FROM Users', [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    console.log(rows);
-    var myJson = JSON.stringify(rows);
-    reponse.write(myJson);
-    reponse.end();
-   });
-
-
-
-
+app.use('/users', getInfo({query:'SELECT * FROM Users'}));
+app.get('/users', function (req, res) {
 });
 
 
-app.get('/messages', function (request, reponse) {
-  db.all('SELECT * FROM Messages', [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    console.log(rows);
-    var myJson = JSON.stringify(rows);
-    reponse.write(myJson);
-    reponse.end();
-   });
-
-
+app.use('/messages', getInfo({query:'SELECT * FROM Messages'}));
+app.get('/messages', function (req, res) {
 });
 
 
-app.get('/likes', function (request, reponse) {
-  db.all('SELECT * FROM Likes', [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    console.log(rows);
-    var myJson = JSON.stringify(rows);
-    reponse.write(myJson);
-    reponse.end();
-   });
-
-
+app.use('/likes', getInfo({query:'SELECT * FROM Likes'}));
+app.get('/likes', function (req, res) {
 });
 
 
-app.get('/contacts', function (request, reponse) {
-  db.all('SELECT * FROM Contacts', [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    console.log(rows);
-    var myJson = JSON.stringify(rows);
-    reponse.write(myJson);
-    reponse.end();
-   });
-
+app.use('/contacts', getInfo({query:'SELECT * FROM Contacts'}));
+app.get('/contacts', function (req, res) {
 });
 
 
-app.get('*', function (request, reponse) {
-    reponse.end("404 Page not found");
 
+app.get('*', function (req, res) {
+    res.end("404 Page not found");
 });
 
 
 http.createServer(app).listen(3000)
+console.log("server running");
+console.log("Go to: localhost:3000/users");
 
 //http://evanhahn.com/understanding-express/
